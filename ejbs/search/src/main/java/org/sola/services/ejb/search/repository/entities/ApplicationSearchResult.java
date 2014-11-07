@@ -166,17 +166,22 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     + "  (SELECT (app.name_lastpart||'/'||app.name_firstpart) as display_value  "
     + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id  "
     + "  WHERE app.application_id = a.id "
-//    + "  AND compare_strings(#{" + QUERY_PARAM_PARCEL + "}, app.name_lastpart||'/'||app.name_firstpart)"
     + "  ORDER BY display_value) tmp)  ")
     @Column(name = "parcel")
     private String parcel;
     
     @AccessFunctions(onSelect = "(SELECT string_agg(tmp.display_value, ',') FROM "
-    + "  (SELECT (app.name_lastpart||'/'||app.name_firstpart) as display_value  "
-    + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id  "
+    + "  (SELECT distinct (sg.name) as display_value  "
+    + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id,  "        
+    + "  cadastre.cadastre_object co, "
+    + "  cadastre.spatial_unit_group sg "
     + "  WHERE app.application_id = a.id "
-//    + "  AND compare_strings(#{" + QUERY_PARAM_SECTION + "}, app.name_lastpart||'/'||app.name_firstpart)"
+    + "  AND app.name_lastpart||'/'||app.name_firstpart= co.name_lastpart||'/'||co.name_firstpart "
+    + "  AND sg.hierarchy_level = 4 "
+    + "  AND ST_Intersects(ST_PointOnSurface(co.geom_polygon), sg.geom) "        
     + "  ORDER BY display_value) tmp)  ")
+    
+    
     @Column(name = "section")
     private String section;
     
