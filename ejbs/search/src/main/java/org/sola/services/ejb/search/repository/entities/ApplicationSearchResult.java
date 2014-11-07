@@ -166,20 +166,10 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     + "  (SELECT (app.name_lastpart||'/'||app.name_firstpart) as display_value  "
     + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id  "
     + "  WHERE app.application_id = a.id "
-//    + "  AND compare_strings(#{" + QUERY_PARAM_PARCEL + "}, app.name_lastpart||'/'||app.name_firstpart)"
     + "  ORDER BY display_value) tmp)  ")
     @Column(name = "parcel")
     private String parcel;
-    
-    @AccessFunctions(onSelect = "(SELECT string_agg(tmp.display_value, ',') FROM "
-    + "  (SELECT (app.name_lastpart||'/'||app.name_firstpart) as display_value  "
-    + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id  "
-    + "  WHERE app.application_id = a.id "
-//    + "  AND compare_strings(#{" + QUERY_PARAM_SECTION + "}, app.name_lastpart||'/'||app.name_firstpart)"
-    + "  ORDER BY display_value) tmp)  ")
-    @Column(name = "section")
-    private String section;
-    
+   
     @Column(name = "fee_paid")
     private Boolean feePaid;
     @Column(name = "rowversion")
@@ -202,14 +192,6 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
 
     public void setParcel(String parcel) {
         this.parcel = parcel;
-    }
-
-    public String getSection() {
-        return section;
-    }
-
-    public void setSection(String section) {
-        this.section = section;
     }
     
     public String getId() {
