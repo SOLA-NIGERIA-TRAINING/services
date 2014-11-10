@@ -170,6 +170,21 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     @Column(name = "parcel")
     private String parcel;
     
+    @AccessFunctions(onSelect = "(SELECT string_agg(tmp.display_value, ',') FROM "
+    + "  (SELECT distinct (sg.name) as display_value  "
+    + "  FROM application.application_property app INNER JOIN application.application aa ON app.application_id = aa.id,  "        
+    + "  cadastre.cadastre_object co, "
+    + "  cadastre.spatial_unit_group sg "
+    + "  WHERE app.application_id = a.id "
+    + "  AND app.name_lastpart||'/'||app.name_firstpart= co.name_lastpart||'/'||co.name_firstpart "
+    + "  AND sg.hierarchy_level = 4 "
+    + "  AND ST_Intersects(ST_PointOnSurface(co.geom_polygon), sg.geom) "        
+    + "  ORDER BY display_value) tmp)  ")
+    
+    
+    @Column(name = "section")
+    private String section;
+     
     @Column(name = "fee_paid")
     private Boolean feePaid;
     @Column(name = "rowversion")
@@ -186,6 +201,14 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
         super();
     }
 
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+    
     public String getParcel() {
         return parcel;
     }
