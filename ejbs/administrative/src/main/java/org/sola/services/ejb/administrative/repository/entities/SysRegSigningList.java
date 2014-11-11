@@ -37,6 +37,8 @@ public class SysRegSigningList extends AbstractReadOnlyEntity {
     private String parcel;
     @Column(name = "persons")
     private String persons;
+    @Column(name = "name")
+    private String name;
 
     public SysRegSigningList() {
         super();
@@ -82,4 +84,13 @@ public class SysRegSigningList extends AbstractReadOnlyEntity {
     public void setPersons(String persons) {
         this.persons = persons;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
  }
